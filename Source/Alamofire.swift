@@ -26,6 +26,7 @@ import Foundation
 
 /// Types adopting the `URLConvertible` protocol can be used to construct URLs, which are then used to construct
 /// URL requests.
+// protocol也能作为参数传递？ 为什么要写成protocol类型？ 直接用asURL不行吗？
 public protocol URLConvertible {
     /// Returns a URL that conforms to RFC 2396 or throws an `Error`.
     ///
