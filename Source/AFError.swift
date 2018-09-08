@@ -1,8 +1,11 @@
-//
+// AFError类，是对错误的封装，包含了AlamoFire中所有可能出现的错误
+// 总体来说，属于「响应」部分（参考：http://blog.oneinbest.com/2017/04/27/swift学习及Alamofire源码阅读/）
 //  AFError.swift
 //
+// 下面这个网址，指向的是：https://github.com/Alamofire/Foundation 介绍的是Alamofire软件基金会的官方政策
 //  Copyright (c) 2014-2018 Alamofire Software Foundation (http://alamofire.org/)
 //
+// 次框架的授权事宜（貌似就是免责声明～）
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
 //  in the Software without restriction, including without limitation the rights
@@ -21,31 +24,40 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 //
-
+// 不知道Swift的Founddation和OC的Foundation有何区别
 import Foundation
 
+/// 定义了不同类型的errors，和其错误原因
 /// `AFError` is the error type returned by Alamofire. It encompasses a few different types of errors, each with
 /// their own associated reasons.
 ///
-/// - invalidURL:                  Returned when a `URLConvertible` type fails to create a valid `URL`.
-/// - parameterEncodingFailed:     Returned when a parameter encoding object throws an error during the encoding process.
-/// - multipartEncodingFailed:     Returned when some step in the multipart encoding process fails.
-/// - responseValidationFailed:    Returned when a `validate()` call fails.
-/// - responseSerializationFailed: Returned when a response serializer encounters an error in the serialization process.
+
+// 只有这5种错误？
+// 从「Returned」开始，是对齐的，是怎么对齐的？
+/// - invalidURL:                  Returned when a `URLConvertible` type fails to create a valid `URL`. / 当无法创建一个有效的URL时返回这个错误
+/// - parameterEncodingFailed:     Returned when a parameter encoding object throws an error during the encoding process. / 当参数在编码过程中抛出错误时返回这个错误
+/// - multipartEncodingFailed:     Returned when some step in the multipart encoding process fails. / multipart encoding错误时返回（multipart encoding是什么东东？）
+/// - responseValidationFailed:    Returned when a `validate()` call fails. / `validate()`调用失败时返回（`validate()`是啥？）
+/// - responseSerializationFailed: Returned when a response serializer encounters an error in the serialization process. / 「序列化」过程中遇到错误时返回。（「序列化/Serialization」是啥？）
+
+// AFError是一个枚举enum，enum可以继承？这里意思是AFError继承自Error？
 public enum AFError: Error {
+    // 参数编码错误（对应上面5种错误的第2种）的潜在原因，3个
     /// The underlying reason the parameter encoding error occurred.
     ///
-    /// - missingURL:                 The URL request did not have a URL to encode.
+    /// - missingURL:                 The URL request did not have a URL to encode. / 没有（缺失）要编码的URL
     /// - jsonEncodingFailed:         JSON serialization failed with an underlying system error during the
-    ///                               encoding process.
+    ///                               encoding process. / 编码过程中，JSON序列化失败，并出现基础系统错误
     /// - propertyListEncodingFailed: Property list serialization failed with an underlying system error during
-    ///                               encoding process.
+    ///                               encoding process. / 编码过程中，Property list序列化失败，并出现基础系统错误
+    // enum里面还有一个enum，用来定义上述3种错误
     public enum ParameterEncodingFailureReason {
         case missingURL
-        case jsonEncodingFailed(error: Error)
+        case jsonEncodingFailed(error: Error) // 为什么这两个多了后面括号部分？
         case propertyListEncodingFailed(error: Error)
     }
 
+    // multipart编码错误（对应上面第3种）发生的潜在（可能）的原因，13个
     /// The underlying reason the multipart encoding error occurred.
     ///
     /// - bodyPartURLInvalid:                   The `fileURL` provided for reading an encodable body part isn't a
@@ -89,6 +101,7 @@ public enum AFError: Error {
         case inputStreamReadFailed(error: Error)
     }
 
+    // `validate()`调用失败（对应上面第3种）发生的潜在原因，5个
     /// The underlying reason the response validation error occurred.
     ///
     /// - dataFileNil:             The data file containing the server response did not exist.
@@ -106,6 +119,7 @@ public enum AFError: Error {
         case unacceptableStatusCode(code: Int)
     }
 
+    // response序列化错误（对应上面第3种）发生的潜在原因，7个
     /// The underlying reason the response serialization error occurred.
     ///
     /// - inputDataNil:                    The server response contained no data.
@@ -125,6 +139,8 @@ public enum AFError: Error {
         case propertyListSerializationFailed(error: Error)
     }
 
+    // 下面4个是AFError的case，对应最开头介绍的5种错误
+    // 这样「分层次」，方便归类、抛出不同类型的错误？
     case invalidURL(url: URLConvertible)
     case parameterEncodingFailed(reason: ParameterEncodingFailureReason)
     case multipartEncodingFailed(reason: MultipartEncodingFailureReason)
@@ -132,18 +148,22 @@ public enum AFError: Error {
     case responseSerializationFailed(reason: ResponseSerializationFailureReason)
 }
 
+// 这个结构体是什么意思
 // MARK: - Adapt Error
 
 struct AdaptError: Error {
     let error: Error
 }
 
+// 对原Error进行扩展（系统的Error是一个Protocol？！）（extension/拓展的图标，是黄色的「Ex」）
+// 这里的扩展增加了一个属性underlyingAdaptError，有何作用？
 extension Error {
     var underlyingAdaptError: Error? { return (self as? AdaptError)?.error }
 }
 
 // MARK: - Error Booleans
 
+// 这里又对自己定义的enum进行拓展，为什么不一次性写好？是为了代码可读性吗？
 extension AFError {
     /// Returns whether the AFError is an invalid URL error.
     public var isInvalidURLError: Bool {
