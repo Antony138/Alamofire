@@ -27,6 +27,7 @@ import Foundation
 /// HTTP method definitions.
 ///
 /// See https://tools.ietf.org/html/rfc7231#section-4.3
+// AFError enum后面跟的是Error，这里跟的是String，什么状况？
 public enum HTTPMethod: String {
     case options = "OPTIONS"
     case get     = "GET"
