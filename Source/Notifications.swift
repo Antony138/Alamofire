@@ -3,6 +3,7 @@
 //
 //  Copyright (c) 2014-2018 Alamofire Software Foundation (http://alamofire.org/)
 //
+// 每个文件都要写这一堆东西吗，真浪费行数～
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
 //  in the Software without restriction, including without limitation the rights
@@ -26,17 +27,18 @@ import Foundation
 
 extension Notification.Name {
     /// Used as a namespace for all `URLSessionTask` related notifications.
+    // 添加了一个结构体Task，里面有若干通告
     public struct Task {
-        /// Posted when a `URLSessionTask` is resumed. The notification `object` contains the resumed `URLSessionTask`.
+        /// Posted when a `URLSessionTask` is resumed. The notification `object` contains the resumed `URLSessionTask`. / URLSessionTask重新启动的时候发送次通告
         public static let DidResume = Notification.Name(rawValue: "org.alamofire.notification.name.task.didResume")
 
-        /// Posted when a `URLSessionTask` is suspended. The notification `object` contains the suspended `URLSessionTask`.
+        /// Posted when a `URLSessionTask` is suspended. The notification `object` contains the suspended `URLSessionTask`. / URLSessionTask暂停时发送此通告
         public static let DidSuspend = Notification.Name(rawValue: "org.alamofire.notification.name.task.didSuspend")
 
-        /// Posted when a `URLSessionTask` is cancelled. The notification `object` contains the cancelled `URLSessionTask`.
+        /// Posted when a `URLSessionTask` is cancelled. The notification `object` contains the cancelled `URLSessionTask`. / URLSessionTask取消时发送此通告
         public static let DidCancel = Notification.Name(rawValue: "org.alamofire.notification.name.task.didCancel")
 
-        /// Posted when a `URLSessionTask` is completed. The notification `object` contains the completed `URLSessionTask`.
+        /// Posted when a `URLSessionTask` is completed. The notification `object` contains the completed `URLSessionTask`. / URLSessionTask完成时发送此通告
         public static let DidComplete = Notification.Name(rawValue: "org.alamofire.notification.name.task.didComplete")
     }
 }
