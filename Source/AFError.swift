@@ -42,6 +42,7 @@ import Foundation
 
 // AFError是一个枚举enum，enum可以继承？这里意思是AFError继承自Error？
 public enum AFError: Error {
+    
     // 参数编码错误（对应上面5种错误的第2种）的潜在原因，3个
     /// The underlying reason the parameter encoding error occurred.
     ///
@@ -50,14 +51,14 @@ public enum AFError: Error {
     ///                               encoding process. / 编码过程中，JSON序列化失败，并出现基础系统错误
     /// - propertyListEncodingFailed: Property list serialization failed with an underlying system error during
     ///                               encoding process. / 编码过程中，Property list序列化失败，并出现基础系统错误
-    // enum里面还有一个enum，用来定义上述3种错误
+    // enum里面还有一个enum
     public enum ParameterEncodingFailureReason {
         case missingURL
         case jsonEncodingFailed(error: Error) // 为什么这两个多了后面括号部分？
         case propertyListEncodingFailed(error: Error)
     }
 
-    // multipart编码错误（对应上面第3种）发生的潜在（可能）的原因，13个
+    // multipart编码错误（对应上面5种错误的第3种）发生的潜在（可能）的原因，13个
     /// The underlying reason the multipart encoding error occurred.
     ///
     /// - bodyPartURLInvalid:                   The `fileURL` provided for reading an encodable body part isn't a
@@ -101,7 +102,7 @@ public enum AFError: Error {
         case inputStreamReadFailed(error: Error)
     }
 
-    // `validate()`调用失败（对应上面第3种）发生的潜在原因，5个
+    // `validate()`调用失败（对应上面5种错误的第4种）发生的潜在原因，5个
     /// The underlying reason the response validation error occurred.
     ///
     /// - dataFileNil:             The data file containing the server response did not exist.
@@ -119,7 +120,7 @@ public enum AFError: Error {
         case unacceptableStatusCode(code: Int)
     }
 
-    // response序列化错误（对应上面第3种）发生的潜在原因，7个
+    // response序列化错误（对应上面5种错误的第5种）发生的潜在原因，7个
     /// The underlying reason the response serialization error occurred.
     ///
     /// - inputDataNil:                    The server response contained no data.
@@ -162,11 +163,13 @@ extension Error {
 }
 
 // MARK: - Error Booleans
+// Error 布尔值，就是是否有错误的意思？
 
 // 这里又对自己定义的enum进行拓展，为什么不一次性写好？是为了代码可读性吗？
 extension AFError {
     /// Returns whether the AFError is an invalid URL error.
     public var isInvalidURLError: Bool {
+        // if case是什么写法？
         if case .invalidURL = self { return true }
         return false
     }
@@ -201,9 +204,11 @@ extension AFError {
 }
 
 // MARK: - Convenience Properties
+// 方便使用者识别错误的属性？
 
 extension AFError {
     /// The `URLConvertible` associated with the error.
+    // 返回具体的错误提示？
     public var urlConvertible: URLConvertible? {
         switch self {
         case .invalidURL(let url):
@@ -279,6 +284,7 @@ extension AFError {
     }
 }
 
+// 对AFError enum 内的 enum 进行扩展
 extension AFError.ParameterEncodingFailureReason {
     var underlyingError: Error? {
         switch self {
@@ -365,7 +371,9 @@ extension AFError.ResponseSerializationFailureReason {
 }
 
 // MARK: - Error Descriptions
+// 错误的具体描述
 
+// LocalizedError也是一个Protocol（所以，AFError comfirm了多个protocols）
 extension AFError: LocalizedError {
     public var errorDescription: String? {
         switch self {
@@ -383,6 +391,7 @@ extension AFError: LocalizedError {
     }
 }
 
+// 写具体的原因，让使用者更容易排查
 extension AFError.ParameterEncodingFailureReason {
     var localizedDescription: String {
         switch self {
