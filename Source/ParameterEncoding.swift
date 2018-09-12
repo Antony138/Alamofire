@@ -27,7 +27,7 @@ import Foundation
 /// HTTP method definitions.
 ///
 /// See https://tools.ietf.org/html/rfc7231#section-4.3
-// AFError enum后面跟的是Error，这里跟的是String，什么状况？
+// AFError enum后面跟的是Error，这里跟的是String，什么状况？enum可以继承自Protocol，也可以继承自class？
 public enum HTTPMethod: String {
     case options = "OPTIONS"
     case get     = "GET"
@@ -43,9 +43,12 @@ public enum HTTPMethod: String {
 // MARK: -
 
 /// A dictionary of parameters to apply to a `URLRequest`.
+// typealias：用于重命名类型名称，让代码更加清晰
+// 这里将字典类型，定义为Parameters
 public typealias Parameters = [String: Any]
 
 /// A type used to define how a set of parameters are applied to a `URLRequest`.
+// 这里定义的是一个protocol
 public protocol ParameterEncoding {
     /// Creates a URL request by encoding parameters and applying them onto an existing request.
     ///
@@ -55,6 +58,11 @@ public protocol ParameterEncoding {
     /// - throws: An `AFError.parameterEncodingFailed` error if encoding fails.
     ///
     /// - returns: The encoded request.
+    // 如果没有重命名Parameters，这里的类型就要写成[String: Any]?，复杂一些
+    // 这个方法用于创建一个URLRequest——利用parameters
+    // throws是什么用法？和以前的error一样，以前，error是作为方法的一个参数，但是这样开发者很可能会忽略error（传入nil）
+    // 这里用throws，表示要调用这个方法，要用try catch捕抓异常，否则编译无法通过
+    // 或者用try?(返回Optional类型)，或者用try!，返回通常的类型——要尽量避免使用，或者返回错误，程序就会crash
     func encode(_ urlRequest: URLRequestConvertible, with parameters: Parameters?) throws -> URLRequest
 }
 

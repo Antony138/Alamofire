@@ -25,6 +25,7 @@
 
 import Foundation
 
+// 利用extension对Notification的Name进行扩展，这样和直接将通知名称声明成常量有何区别？可以直接用.调用通告名称？
 extension Notification.Name {
     /// Used as a namespace for all `URLSessionTask` related notifications.
     // 添加了一个结构体Task，里面有若干通告
@@ -46,6 +47,7 @@ extension Notification.Name {
 // MARK: -
 
 extension Notification {
+    // 这些Key有啥用？
     /// Used as a namespace for all `Notification` user info dictionary keys.
     public struct Key {
         /// User info dictionary key representing the `URLSessionTask` associated with the notification.
