@@ -49,6 +49,7 @@ public typealias Parameters = [String: Any]
 
 /// A type used to define how a set of parameters are applied to a `URLRequest`.
 // 这里定义的是一个protocol
+// 返回的是一个URLRequesr
 public protocol ParameterEncoding {
     /// Creates a URL request by encoding parameters and applying them onto an existing request.
     ///
@@ -82,6 +83,9 @@ public protocol ParameterEncoding {
 ///
 /// `BoolEncoding` can be used to configure how boolean values are encoded. The default behavior is to encode
 /// `true` as 1 and `false` as 0.
+// 这里是一个struct，不过后面跟了一个protocol，是confirm ParameterEncoding这个protocol吗？
+// 这个struct 239行代码！！！
+// 是对URL的编码？有啥好编的？
 public struct URLEncoding: ParameterEncoding {
 
     // MARK: Helper Types
